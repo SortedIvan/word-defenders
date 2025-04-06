@@ -139,12 +139,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\game\enemy\asteroid.cpp" />
+    <ClCompile Include="src\game\enemy\asteroid_spawner.cpp" />
+    <ClCompile Include="src\game\enemy\enemy_manager.cpp" />
+    <ClCompile Include="src\game\game.cpp" />
+    <ClCompile Include="src\game\player\planet.cpp" />
     <ClCompile Include="src\generic_constructs\dashed_line.cpp" />
     <ClCompile Include="src\generic_constructs\line.cpp" />
     <ClCompile Include="src\generic_constructs\point.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\game\enemy\asteroid.hpp" />
+    <ClInclude Include="src\game\enemy\asteroid_spawner.hpp" />
+    <ClInclude Include="src\game\enemy\enemy_manager.hpp" />
+    <ClInclude Include="src\game\game.hpp" />
+    <ClInclude Include="src\game\player\planet.hpp" />
     <ClInclude Include="src\generic_constructs\dashed_line.hpp" />
     <ClInclude Include="src\generic_constructs\line.hpp" />
     <ClInclude Include="src\generic_constructs\point.hpp" />

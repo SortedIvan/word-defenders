@@ -21,7 +21,7 @@ void DashedLine::initializeLinesArray(sf::Vector2f pointA, sf::Vector2f pointB, 
 
 	// 5) Populate the dashed line segments
 	for (int i = 0; i < numOfLines; ++i) {
-		if (i % 2 == 0) {  // Alternate dashes
+		if (i % 2 == 0) { 
 			sf::Vector2f subStartPoint = (dirVec * (float)i * linesLength) + pointA;
 			sf::Vector2f subEndPoint = (dirVec * (float)(i + 1) * linesLength) + pointA;
 			Line line(subStartPoint, subEndPoint, lineColor);
