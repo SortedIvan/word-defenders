@@ -11,6 +11,8 @@ private:
 	Planet& target;
 
 	std::string wordToDestroy;
+
+	int id;
 	int size;
 	int health;
 	int coinRewardUponDestroying;
@@ -24,10 +26,13 @@ private:
 	void moveTowardsTarget(float deltaTime);
 	void checkForTargetCollision();
 public:
-	Asteroid(int size, int health, int speed, int coinRewardUponDestroying,
+	Asteroid(int id, int size, int health, int speed, int coinRewardUponDestroying,
 		std::string wordToDestroy, sf::Vector2f spawnPosition, Planet& target, int damage);
 	~Asteroid();
 
 	void update(float deltaTime);
 	void draw(sf::RenderWindow& window);
+	bool isDead();
+	int getId();
+	std::string getWordToDestroy();
 };

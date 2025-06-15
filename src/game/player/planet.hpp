@@ -1,3 +1,4 @@
+#pragma once
 #include "SFML/Graphics.hpp"
 #include "../src/generic_constructs/point.hpp"
 

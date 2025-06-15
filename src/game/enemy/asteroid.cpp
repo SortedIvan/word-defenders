@@ -3,16 +3,16 @@
 #include "../../math_utils/vec_math.hpp"
 #include "../../math_utils/geometry_math.hpp"
 
-Asteroid::Asteroid(int size, int health, int speed, int coinRewardUponDestroying,
+Asteroid::Asteroid(int id, int size, int health, int speed, int coinRewardUponDestroying,
 	std::string wordToDestroy, sf::Vector2f spawnPosition, Planet& target, int damage) 
 	: target(target) {
 
+	this->id = id;
 	this->size = size;
 	this->speed = speed;
 	this->coinRewardUponDestroying = coinRewardUponDestroying;
 	this->health = health;
 	this->wordToDestroy = wordToDestroy;
-	this->target = target;
 	this->damage = damage;
 	
 	destroyed = false;
@@ -61,4 +61,15 @@ void Asteroid::checkForTargetCollision() {
 		target.applyDamage(damage);
 		destroyed = true;
 	}
+}
+bool Asteroid::isDead() {
+	return destroyed;
+}
+
+int Asteroid::getId() {
+	return id;
+}
+
+std::string Asteroid::getWordToDestroy() {
+	return wordToDestroy;
 }
