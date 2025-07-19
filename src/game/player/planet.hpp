@@ -12,6 +12,9 @@ private:
 	Point planetShape;
 
 public:
+	Planet(int size, int health, sf::Vector2f screnSize);
+	~Planet();
+
 	void update(float deltaTime);
 	void draw(sf::RenderWindow& window);
 	void applyDamage(int damage);

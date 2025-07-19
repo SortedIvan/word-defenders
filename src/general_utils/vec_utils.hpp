@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <iostream>
 
 struct VecUtils final {
     template<typename T>
@@ -17,5 +18,9 @@ struct VecUtils final {
         }
 
         arr.erase(arr.begin() + pos);
+    }
+
+    static inline void printSfVec(sf::Vector2f& vec) {
+        std::cout << "(x: " << vec.x << ", " << "y: " << vec.y << ")" << std::endl;
     }
 };

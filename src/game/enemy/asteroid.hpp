@@ -19,6 +19,7 @@ private:
 	int speed;
 	int damage;
 	bool destroyed;
+	bool debugEnabled = false;
 
 	// Keep the asteroid a point/circle shape for now
 	Point asteroidShape;

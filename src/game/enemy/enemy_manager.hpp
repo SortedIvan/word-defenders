@@ -36,7 +36,7 @@ private:
 	std::vector<SpawnArea> spawnAreas;
 	Planet& planet;
 
-	void cleanUpDestroyedEnemies(std::vector<int>& enemiesToCleanUp);
+	void cleanUpDestroyedEnemies();
 
 public:
 	EnemyManager(int maxEnemiesSpawned, sf::Vector2f screenDimensions, Planet& planet);

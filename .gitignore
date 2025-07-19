@@ -3,6 +3,13 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# Visual Studio IntelliSense DBs
+*.VC.db
+*.VC.opendb
+word-def.62f92fb1*
+
+word_repo*
+
 # User-specific files
 *.rsuser
 *.suo

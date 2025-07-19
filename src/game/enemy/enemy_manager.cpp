@@ -1,5 +1,6 @@
 #include "enemy_manager.hpp"
 #include "../src/general_utils/vec_utils.hpp"
+#include <iostream>
 
 #define SPAWN_AREA_DISTANCE_FROM_SCREEN 150.f
 #define WIDTH_HEIGHT_OF_SPAWN_AREAS 150.
@@ -45,23 +46,23 @@ int EnemyManager::generateId() {
 }
 
 void EnemyManager::update(float deltaTime) {	
-	std::vector<int> enemiesToCleanUp;
+	cleanUpDestroyedEnemies();
 
 	for (int i = 0; i < enemies.size(); ++i) {
-		Asteroid* enemy = enemies[i].get();
-		
-		if (enemy->isDead()) {
-			enemiesToCleanUp.push_back(enemy->getId());
+		if (!enemies[i]) {
+			continue;
 		}
-		else {
-			// otherwise, run its updates
-			enemy->update(deltaTime);
-		}
+
+		enemies[i]->update(deltaTime);
 	}
 }
 
 void EnemyManager::draw(sf::RenderWindow& window) {
 	for (int i = 0; i < enemies.size(); ++i) {
+		if (!enemies[i]) {
+			continue;
+		}
+
 		enemies[i].get()->draw(window);
 	}
 }
@@ -71,14 +72,14 @@ void EnemyManager::spawnEnemy() {
 	int randomArea = GenericMath::getRandomInt(0, static_cast<int>(spawnAreas.size()) - 1);
 	sf::Vector2f spawnPoint = spawnAreas[randomArea].getRandomPointWithinArea();
 
+
 	// choose random word to be assigned to the enemy which will destroy it
-	// for testing, just pick one of couple of words
 	std::vector<std::string> testWords = { "hello", "world", "testing", "discombobulated" };
 	std::string randomWord = testWords[GenericMath::getRandomInt(0, static_cast<int>(testWords.size()) - 1)];
 
 	int enemyId = generateId();
 	std::unique_ptr<Asteroid> asteroid = std::make_unique<Asteroid>(
-		enemyId, 20, 10, 5, 10, randomWord, spawnPoint, planet, 10
+		enemyId, 10, 10, 1.5, 10, randomWord, spawnPoint, planet, 10
 	);
 
 	if (enemies.size() == enemyId) {
@@ -93,7 +94,25 @@ void EnemyManager::spawnEnemy() {
 }
 
 // We have to clean up any word entries and also free up the id
-void EnemyManager::cleanUpDestroyedEnemies(std::vector<int>& enemiesToCleanUp) {
+void EnemyManager::cleanUpDestroyedEnemies() {
+	std::vector<int> enemiesToCleanUp;
+
+	for (int i = 0; i < enemies.size(); ++i) {
+		Asteroid* enemy = enemies[i].get();
+
+		if (!enemy) {
+			continue;
+		}
+
+		if (enemy->isDead()) {
+			enemiesToCleanUp.push_back(enemy->getId());
+		}
+	}
+
+	if (enemiesToCleanUp.empty()) {
+		return;
+	}
+
 	for (int i = 0; i < enemiesToCleanUp.size(); ++i) {
 		Asteroid* enemy = enemies[enemiesToCleanUp[i]].get();
 		const std::string wordToDestroy = enemy->getWordToDestroy();
@@ -104,10 +123,9 @@ void EnemyManager::cleanUpDestroyedEnemies(std::vector<int>& enemiesToCleanUp) {
 			VecUtils::findAndDelete<int>(wordToEnemyMap[wordToDestroy], enemyId);
 		}
 		else {
-			// completely delete the entry
 			wordToEnemyMap.erase(wordToDestroy);
 		}
 
-		freeIds.push(enemyId);
+		enemies[enemiesToCleanUp[i]] = nullptr;
 	}
 }

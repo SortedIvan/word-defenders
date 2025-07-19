@@ -1,7 +1,14 @@
 #include <string>
+#include <iostream>
 #include "asteroid.hpp"
 #include "../../math_utils/vec_math.hpp"
 #include "../../math_utils/geometry_math.hpp"
+#include "../../general_utils/vec_utils.hpp"
+
+bool asteroidCollides(sf::Vector2f trajectoryDirection, int size, Planet& target, sf::Vector2f asteroidCenter) {
+	sf::Vector2f pointThatCanCollide = (trajectoryDirection * (float)size) + asteroidCenter;
+	return GeometryMath::checkCircleContainsPoint(target.getSize(), target.getPosition(), pointThatCanCollide);
+}
 
 Asteroid::Asteroid(int id, int size, int health, int speed, int coinRewardUponDestroying,
 	std::string wordToDestroy, sf::Vector2f spawnPosition, Planet& target, int damage) 
@@ -17,7 +24,12 @@ Asteroid::Asteroid(int id, int size, int health, int speed, int coinRewardUponDe
 	
 	destroyed = false;
 	trajectoryDirection = VecMath::normalize(target.getPosition() - spawnPosition);
+	
+	std::cout << "Position: "; VecUtils::printSfVec(spawnPosition);
+	std::cout << "Trajectory: "; VecUtils::printSfVec(trajectoryDirection);
+
 	asteroidShape = Point(spawnPosition, size, sf::Color::Red);
+	asteroidShape.getCircleShape().setOrigin(sf::Vector2f(size / 2, size / 2));
 }
 
 void Asteroid::update(float deltaTime) {
@@ -40,9 +52,20 @@ Asteroid::~Asteroid() {
 
 // we already store the position in the point class, no need to have it in the asteroid itself as well
 void Asteroid::moveTowardsTarget(float deltaTime) {
+	if (debugEnabled) {
+		sf::Vector2f asteroidPos = asteroidShape.getPosition();
+		sf::Vector2f asteroidMovementVec = trajectoryDirection * deltaTime * (float)speed;
+
+		std::cout << "======================" << std::endl;
+		std::cout << "Asteroid pos:"; VecUtils::printSfVec(asteroidPos);
+		std::cout << "Move vec:"; VecUtils::printSfVec(asteroidMovementVec);
+	}
+
 	asteroidShape.move(
-		asteroidShape.getPosition() + (trajectoryDirection * deltaTime * (float)speed)
+		trajectoryDirection * deltaTime * ((float)speed * 100)
 	);
+
+
 }
 
 void Asteroid::checkForTargetCollision() {
@@ -54,14 +77,12 @@ void Asteroid::checkForTargetCollision() {
 		return;
 	}
 
-	sf::Vector2f pointThatCanCollide = trajectoryDirection * (float)size;
-
-	if (GeometryMath::checkCircleContainsPoint(target.getSize(), target.getPosition(), pointThatCanCollide)) {
-		// we have hit the target, apply damage and destroy
+	if (asteroidCollides(trajectoryDirection, size, target, asteroidShape.getPosition())) {
 		target.applyDamage(damage);
 		destroyed = true;
 	}
 }
+
 bool Asteroid::isDead() {
 	return destroyed;
 }
