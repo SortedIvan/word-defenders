@@ -22,4 +22,5 @@ public:
 	sf::Vector2f getPosition();
 	Point& getShape();
 	int getSize(); // in this case, this is the radius of the planet
+	bool isDead();
 };

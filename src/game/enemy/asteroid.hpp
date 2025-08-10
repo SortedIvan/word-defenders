@@ -4,11 +4,13 @@
 #include "SFML/Graphics.hpp"
 #include "../src/generic_constructs/point.hpp"
 #include "../player/planet.hpp"
+#include "../src/generic_constructs/dashed_line.hpp"
 
 class Asteroid {
 private:
 	sf::Vector2f trajectoryDirection;
 	Planet& target;
+	DashedLine pathwayToTarget;
 
 	std::string wordToDestroy;
 

@@ -3,7 +3,7 @@
 #include <iostream>
 
 #define SPAWN_AREA_DISTANCE_FROM_SCREEN 150.f
-#define WIDTH_HEIGHT_OF_SPAWN_AREAS 150.
+#define WIDTH_HEIGHT_OF_SPAWN_AREAS 150.f
 
 EnemyManager::EnemyManager(int maxEnemiesSpawned, sf::Vector2f screenDimensions, Planet& planet) : planet(planet) {
 	this->maxEnemiesSpawned = maxEnemiesSpawned;

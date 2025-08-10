@@ -20,10 +20,7 @@ Planet::~Planet() {
 }
 
 void Planet::update(float deltaTime) {
-	if (health < 0) {
-		// end the game here
-		std::cout << "Game over baby!" << std::endl;
-	}
+
 }
 
 void Planet::draw(sf::RenderWindow& window) {
@@ -48,4 +45,8 @@ Point& Planet::getShape() {
 
 int Planet::getSize() {
 	return size;
+}
+
+bool Planet::isDead() {
+	return health <= 0;
 }

@@ -30,19 +30,23 @@ Asteroid::Asteroid(int id, int size, int health, int speed, int coinRewardUponDe
 
 	asteroidShape = Point(spawnPosition, size, sf::Color::Red);
 	asteroidShape.getCircleShape().setOrigin(sf::Vector2f(size / 2, size / 2));
+
+	pathwayToTarget = DashedLine(asteroidShape.getCircleShape().getPosition(), target.getPosition(), 10.f, sf::Color::White);
 }
 
 void Asteroid::update(float deltaTime) {
-	// first, check if the asteroid has reached the target -> thus deal damage
 	checkForTargetCollision();
 
-	// perform any other asteroid updates here
 	if (!destroyed) {
 		moveTowardsTarget(deltaTime);
+
+		// after movement, recalcuate pathway
+		pathwayToTarget.initializeLinesArray(asteroidShape.getCircleShape().getPosition(), target.getPosition());
 	}
 }
 
 void Asteroid::draw(sf::RenderWindow& window) {
+	pathwayToTarget.draw(window);
 	asteroidShape.draw(window);
 }
 

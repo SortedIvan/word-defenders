@@ -3,6 +3,10 @@
 #include "../game/player/planet.hpp"
 #include "../game/enemy/enemy_manager.hpp"
 
+void tryLoadFont(sf::Font& font, std::string path);
+void displayGameOverText(Planet& player, sf::Text& gameOverText, sf::RenderWindow& window);
+void setGameOverTextPosition(sf::Text& text, sf::RenderWindow& window);
+
 void Game::start() {
 
     // TODO: Remove these from the game onto a dedicated class/declared variables
@@ -10,10 +14,17 @@ void Game::start() {
     Planet player(20.f, 100, (sf::Vector2f)window.getSize());
     EnemyManager enemyManager(100, (sf::Vector2f)window.getSize(), player);
     float deltaTime;
+    
+    bool closeWindow = false;
+
+    sf::Font font;
+    tryLoadFont(font, "./8bitfont.ttf");
+    sf::Text gameEndText("YOU ARE DEAD", font);
+    gameEndText.setCharacterSize(50);
+    setGameOverTextPosition(gameEndText, window);
 
     while (window.isOpen())
     {
-        // Capture delta time
         deltaTime = deltaTimeClock.restart().asSeconds();
 
         while (window.pollEvent(e))
@@ -22,6 +33,17 @@ void Game::start() {
             {
                 window.close();
             }
+
+            // Check if game is finished
+            if (player.isDead()) {
+                if (e.type == sf::Event::KeyReleased) {
+                    closeWindow = true;
+                    break;
+                }
+
+                continue;
+            }
+
 
             if (e.type == sf::Event::TextEntered)
             {
@@ -37,9 +59,13 @@ void Game::start() {
             }
         }
 
-        // Run updates
-        player.update(deltaTime);
-        enemyManager.update(deltaTime);
+        if (closeWindow) { break; }
+
+        if (!player.isDead()) {
+            // Run updates
+            player.update(deltaTime);
+            enemyManager.update(deltaTime);
+        }
 
         // Clear the window
         window.clear(sf::Color::Black);
@@ -47,6 +73,8 @@ void Game::start() {
         // draw
         player.draw(window);
         enemyManager.draw(window);
+        
+        displayGameOverText(player, gameEndText, window);
 
         // display
         window.display();
@@ -74,4 +102,29 @@ void Game::fixedUpdate() {
 
 }
 
+void tryLoadFont(sf::Font& font, std::string path) {
+    {
+        if (!font.loadFromFile(path))
+        {
+            std::cout << "Error loading the font file" << std::endl;
+            system("pause");
+        }
+    }
+}
 
+void displayGameOverText(Planet& player, sf::Text& gameOverText, sf::RenderWindow& window) {
+    if (!player.isDead()) {
+        return;
+    }
+
+    window.draw(gameOverText);
+}
+
+void setGameOverTextPosition(sf::Text& text, sf::RenderWindow& window) {
+    sf::Vector2f windowSize = (sf::Vector2f)window.getSize();
+    
+    text.setPosition(
+        (windowSize.x / 2) - (text.getCharacterSize() * text.getString().getSize()) / 3.10,
+        (windowSize.y / 2) - (text.getCharacterSize() * 3)
+    );
+}
